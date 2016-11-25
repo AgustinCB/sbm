@@ -26,13 +26,13 @@ router.post('/auth', user.authenticate, user.token)
 
 router.get('/user', user.current)
 router.post('/user', authenticate, user.create)
-router.put('/user', authenticate, user.update)
-router.delete('/user', authenticate, user.delete)
+router.put('/user/:id', authenticate, user.update)
+router.delete('/user/:id', authenticate, user.delete)
 
 router.get('/post', post.list)
 router.post('/post', authenticate, post.create)
-router.put('/post', authenticate, post.update)
-router.delete('/post', authenticate, post.delete)
+router.put('/post/:id', authenticate, post.update)
+router.delete('/post/:id', authenticate, post.delete)
 
 router.get('/comment', comment.list)
 router.post('/comment', authenticate, comment.create)
@@ -40,6 +40,12 @@ router.put('/comment', authenticate, comment.update)
 router.delete('/comment', authenticate, comment.delete)
 
 app.use('/api', router)
+
+app.use((error, req, res) => {
+  console.log(error.toString())
+  res.status(error.status)
+  res.json({ error: error.message })
+})
 
 export default function (admin) {
   return User.register(Object.assign(admin, {admin: true}))
