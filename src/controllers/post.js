@@ -13,11 +13,15 @@ export default {
   create: (req, res, next) => {
     const new_post = new Post(req.body)
 
+    req.body.author = req.user.id
+
     new_post.save()
       .then((post) => res.status(200).json(post))
       .catch((err) => next(new ApiError('Bad request', 400)))
   },
   update: (req, res, next) => {
+    req.body.author = undefined
+
     Post.findByIdAndUpdate(req.params.post, req.body)
       .then((post) => res.status(200).json(post))
       .catch((err) => next(new ApiError('Bad request', 400)))

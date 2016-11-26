@@ -1,8 +1,11 @@
 import mongoose from 'mongoose'
 
 const Comment = new mongoose.Schema({
-  author: mongoose.Types.ObjectId,
+  author: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User'
+  },
   content: String
 }, { timestamps: true })
 
-export default mongoose.model('Comment', Cmment)
+export default mongoose.model('Comment', Comment)

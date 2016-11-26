@@ -9,6 +9,8 @@ export default {
   create: (req, res, next) => {
     const post = req.params.post
 
+    req.body.author = req.user.id
+
     Post.findById(post)
       .then((post) => {
         post.push(req.body)
@@ -20,6 +22,8 @@ export default {
   update: (req, res, next) => {
     const post = req.params.post,
       comment = req.params.comment
+
+    req.body.author = undefined
 
     Post.findOneAndUpdate({ "_id": post, "comments._id": comment },
       { "$set": { "comments.$": req.body } })

@@ -12,9 +12,12 @@ import comment from './controllers/comment'
 
 const app = express(),
       router = express.Router(),
-      authenticate = expressJwt({secret: 'server secret'})
+      authenticate = expressJwt({secret: 'server secret'}),
+      login = function (req, res, next) {
+        if (!req.user) return res.status(401)
+        next()
+      }
 
-mongoose.connect('mongodb://localhost/sbm')
 mongoose.Promise = Promise
 
 app.use(bodyParser.json())
@@ -24,31 +27,31 @@ passport.use(new LocalStrategy(User.authenticate()))
 
 router.post('/auth', user.authenticate, user.token)
 
-router.get('/user', user.current)
-router.post('/user', authenticate, user.create)
-router.put('/user/:id', authenticate, user.update)
-router.delete('/user/:id', authenticate, user.delete)
+router.get('/user/:id', user.current)
+router.post('/user', authenticate, login, user.create)
+router.put('/user/:id', authenticate, login, user.update)
+router.delete('/user/:id', authenticate, login, user.delete)
 
 router.get('/post', post.list)
-router.post('/post', authenticate, post.create)
-router.put('/post/:post', authenticate, post.update)
-router.delete('/post/:post', authenticate, post.delete)
+router.post('/post', authenticate, login, post.create)
+router.put('/post/:post', authenticate, login, post.update)
+router.delete('/post/:post', authenticate, login, post.delete)
 
 router.get('/comment/:post', comment.list)
-router.post('/comment/:post', authenticate, comment.create)
-router.put('/comment/:post/:comment', authenticate, comment.update)
-router.delete('/comment/:post/:comment', authenticate, comment.delete)
+router.post('/comment/:post', authenticate, login, comment.create)
+router.put('/comment/:post/:comment', authenticate, login, comment.update)
+router.delete('/comment/:post/:comment', authenticate, login, comment.delete)
 
 app.use('/api', router)
 
-app.use((error, req, res) => {
-  console.log(error.toString())
+app.use((error, req, res, next) => {
   res.status(error.status)
   res.json({ error: error.message })
 })
 
-export default function (admin) {
-  return User.register(Object.assign(admin, {admin: true}))
+export default function (admin, mongo = 'sbm') {
+  return mongoose.connect(`mongodb://localhost/${mongo}`)
+    .then(() => User.register(Object.assign(admin, { admin: true })))
     .then((user) => app)
     .catch((err) => app)
 }
