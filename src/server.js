@@ -31,13 +31,13 @@ router.delete('/user/:id', authenticate, user.delete)
 
 router.get('/post', post.list)
 router.post('/post', authenticate, post.create)
-router.put('/post/:id', authenticate, post.update)
-router.delete('/post/:id', authenticate, post.delete)
+router.put('/post/:post', authenticate, post.update)
+router.delete('/post/:post', authenticate, post.delete)
 
-router.get('/comment', comment.list)
-router.post('/comment', authenticate, comment.create)
-router.put('/comment', authenticate, comment.update)
-router.delete('/comment', authenticate, comment.delete)
+router.get('/comment/:post', comment.list)
+router.post('/comment/:post', authenticate, comment.create)
+router.put('/comment/:post/:comment', authenticate, comment.update)
+router.delete('/comment/:post/:comment', authenticate, comment.delete)
 
 app.use('/api', router)
 

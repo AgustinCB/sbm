@@ -18,12 +18,12 @@ export default {
       .catch((err) => next(new ApiError('Bad request', 400)))
   },
   update: (req, res, next) => {
-    Post.findByIdAndUpdate(req.params.id, req.body)
+    Post.findByIdAndUpdate(req.params.post, req.body)
       .then((post) => res.status(200).json(post))
       .catch((err) => next(new ApiError('Bad request', 400)))
   },
   delete: (req, res, next) => {
-    Post.remove({ _id: req.params.id })
+    Post.remove({ _id: req.params.post })
       .then((post) => res.status(204))
       .catch((err) => next(new ApiError('Bad request', 400)))
   }
