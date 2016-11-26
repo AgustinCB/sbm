@@ -10,6 +10,11 @@ export default {
       .then((posts) => res.status(200).json(posts))
       .catch((err) => next(new ApiError('Bad request', 400)))
   },
+  get: (req, res, next) => {
+    Post.findById(req.params.post)
+      .then((post) => res.status(200).json(post))
+      .catch((err) => next(new ApiError('Post not found', 404)))
+  },
   create: (req, res, next) => {
     const new_post = new Post(req.body)
 
@@ -24,11 +29,11 @@ export default {
 
     Post.findByIdAndUpdate(req.params.post, req.body)
       .then((post) => res.status(200).json(post))
-      .catch((err) => next(new ApiError('Bad request', 400)))
+      .catch((err) => next(new ApiError('Bad request', 404)))
   },
   delete: (req, res, next) => {
     Post.remove({ _id: req.params.post })
-      .then((post) => res.status(204))
-      .catch((err) => next(new ApiError('Bad request', 400)))
+      .then((post) => res.status(204).send())
+      .catch((err) => next(new ApiError('Bad request', 404)))
   }
 }

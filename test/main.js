@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 
 import server from '../lib/server'
 import User from '../lib/models/user'
+import Post from '../lib/models/post'
 
 chai.use(chaiHttp)
 const should = chai.should()
@@ -102,14 +103,14 @@ describe('#api', function() {
             .send({ username: 'test2' })
         })
         .catch((err) => {
-          err.status.should.equal(400)
+          err.status.should.equal(409)
           return chai.request(app)
             .put('/api/user/admin')
             .set('Authorization', `Bearer ${token}`)
             .send({ username: 'test2' })
         })
         .catch((err) => {
-          err.status.should.equal(400)
+          err.status.should.equal(409)
         })
     })
 
@@ -126,6 +127,125 @@ describe('#api', function() {
         })
         .then((user) => {
           user.length.should.equal(0)
+        })
+    })
+  })
+
+  describe('#post', function () {
+    it('should list posts', function () {
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then(() => {
+          return chai.request(app)
+            .get('/api/post')
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.length.should.equal(1)
+          res.body[0].title.should.equal('Blog entry one')
+          res.body[0].content.should.equal('Blog entry content')
+        })
+    })
+
+    it('should get a post', function () {
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          return chai.request(app)
+            .get(`/api/post/${post.id}`)
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.title.should.equal('Blog entry one')
+          res.body.content.should.equal('Blog entry content')
+        })
+    })
+
+    it('should create a post', function () {
+      return chai.request(app)
+        .post('/api/post/')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          title: 'Blog entry one',
+          content: 'Blog entry content 2'
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.title.should.equal('Blog entry one')
+          res.body.content.should.equal('Blog entry content 2')
+        })
+    })
+
+    it('should update a post', function () {
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          return chai.request(app)
+            .put(`/api/post/${post.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({
+              title: 'Blog entry one 2',
+              content: 'Blog entry content 2'
+            })
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          return Post.findById(res.body._id)
+        })
+        .then((post) => {
+          post.title.should.equal('Blog entry one 2')
+          post.content.should.equal('Blog entry content 2')
+        })
+    })
+
+    it('should delete a post', function () {
+      let post_id
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          post_id = post.id
+          return chai.request(app)
+            .delete(`/api/post/${post.id}`)
+            .set('Authorization', `Bearer ${token}`)
+        })
+        .then((res) => {
+          res.should.have.status(204)
+          return Post.find({ _id: post_id })
+        })
+        .then((post) => {
+          post.length.should.equal(0)
         })
     })
   })

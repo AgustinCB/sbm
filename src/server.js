@@ -33,6 +33,7 @@ router.put('/user/:id', authenticate, login, user.update)
 router.delete('/user/:id', authenticate, login, user.delete)
 
 router.get('/post', post.list)
+router.get('/post/:post', post.get)
 router.post('/post', authenticate, login, post.create)
 router.put('/post/:post', authenticate, login, post.update)
 router.delete('/post/:post', authenticate, login, post.delete)

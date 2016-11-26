@@ -17,7 +17,7 @@ export default {
   create: (req, res, next) => {
     User.register(req.body)
       .then((user) => res.status(200).json(user))
-      .catch((err) => next(new ApiError('Wrong parameters', 400)))
+      .catch((err) => next(new ApiError('Wrong parameters', 409)))
   },
   update: (req, res, next) => {
     req.body.hash = undefined
@@ -25,7 +25,7 @@ export default {
 
     User.findOneAndUpdate({ username: req.params.id }, req.body)
       .then((user) => res.status(200).json(user))
-      .catch((err) => next(new ApiError('Wrong parameters', 400)))
+      .catch((err) => next(new ApiError('Wrong parameters', 409)))
   },
   delete: (req, res, next) => {
     User.remove({ username: req.params.id })
