@@ -1,3 +1,7 @@
+import Post from '../models/post'
+import Comment from '../models/comment'
+import ApiError from '../error/api_error'
+
 export default {
   list: (req, res, next) => {
     const post = req.params.post
@@ -13,11 +17,11 @@ export default {
 
     Post.findById(post)
       .then((post) => {
-        post.push(req.body)
+        post.comments.push(new Comment(req.body))
         return post.save()
       })
       .then(() => res.status(200).json(req.body))
-      .catch((err) => next(new ApiError('Bad request', 400)))
+      .catch((err) => next(new ApiError('Bad Request', 400)))
   },
   update: (req, res, next) => {
     const post = req.params.post,
@@ -39,7 +43,7 @@ export default {
         post.comments.id(comment).remove()
         return post.save()
       })
-      .then(() => res.status(204))
+      .then(() => res.status(204).send())
       .catch((err) => next(new ApiError('Bad request', 400)))
   }
 }

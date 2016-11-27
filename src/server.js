@@ -46,8 +46,12 @@ router.delete('/comment/:post/:comment', authenticate, login, comment.delete)
 app.use('/api', router)
 
 app.use((error, req, res, next) => {
-  res.status(error.status)
+  res.status(error.status || 500)
   res.json({ error: error.message })
+})
+
+process.on('uncaughtException', (err) => {
+  console.log(`Caught exception: ${err}`);
 })
 
 export default function (admin, mongo = 'sbm') {

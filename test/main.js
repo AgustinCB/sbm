@@ -5,6 +5,7 @@ import mongoose from 'mongoose'
 import server from '../lib/server'
 import User from '../lib/models/user'
 import Post from '../lib/models/post'
+import Comment from '../lib/models/comment'
 
 chai.use(chaiHttp)
 const should = chai.should()
@@ -246,6 +247,127 @@ describe('#api', function() {
         })
         .then((post) => {
           post.length.should.equal(0)
+        })
+    })
+  })
+
+  describe('#comment', function () {
+    it('should returns comments of a post', function () {
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+            comments: [
+              new Comment({ author: user.id, content: 'Comment one' }),
+              new Comment({ author: user.id, content: 'Comment two' })
+            ]
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          return chai.request(app)
+            .get(`/api/comment/${post.id}`)
+            .set('Authorization', `Bearer ${token}`)
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.length.should.equal(2)
+          res.body[0].content.should.equal('Comment one')
+          res.body[1].content.should.equal('Comment two')
+        })
+    })
+
+    it('should create a new comment in a post', function () {
+      let post_id
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          post_id = post.id
+          return chai.request(app)
+            .post(`/api/comment/${post.id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ content: 'Comment one' })
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          return Post.findById(post_id)
+        })
+        .then((post) => {
+          post.comments.length.should.equal(1)
+          post.comments[0].content.should.equal('Comment one')
+        })
+    })
+
+    it('should update a comment in a post', function () {
+      let post_id
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+            comments: [
+              new Comment({ author: user.id, content: 'Comment one' })
+            ]
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          post_id = post.id
+          return chai.request(app)
+            .put(`/api/comment/${post.id}/${post.comments[0].id}`)
+            .set('Authorization', `Bearer ${token}`)
+            .send({ content: 'Comment two' })
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          return Post.findById(post_id)
+        })
+        .then((post) => {
+          post.comments.length.should.equal(1)
+          post.comments[0].content.should.equal('Comment two')
+        })
+    })
+
+    it('should delete a comment in a post', function () {
+      let post_id
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+            comments: [
+              new Comment({ author: user.id, content: 'Comment one' })
+            ]
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          post_id = post.id
+          return chai.request(app)
+            .delete(`/api/comment/${post.id}/${post.comments[0].id}`)
+            .set('Authorization', `Bearer ${token}`)
+        })
+        .then((res) => {
+          res.should.have.status(204)
+          return Post.findById(post_id)
+        })
+        .then((post) => {
+          post.comments.length.should.equal(0)
         })
     })
   })
