@@ -89,7 +89,15 @@ export const api = function (base) {
         })
       })
     },
-    delete: function () {
+    delete: function (path) {
+      return handler(function (info) {
+        return new Promise((resolve, reject) => {
+          request.delete({ url: `${info.url}${path}`, form }, function (err, res) {
+            if (err) return reject(err)
+            resolve(res)
+          })
+        })
+      })
     }
   }
 }
