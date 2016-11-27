@@ -55,7 +55,6 @@ process.on('uncaughtException', (err) => {
 })
 
 export default function (admin, mongo = 'localhost/sbm') {
-  console.log('hola?')
   return mongoose.connect(`mongodb://${mongo}`)
     .then(() => User.register(Object.assign(admin, { admin: true })))
     .then((user) => app)
