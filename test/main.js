@@ -15,7 +15,7 @@ const username = 'admin', password = 'test'
 describe('#api', function() {
   let app, token
   before(function () {
-    return server({ username, password }, `test${Date.now()}`)
+    return server({ username, password }, `localhost/test${Date.now()}`)
       .then((_app) => app = _app)
   })
 

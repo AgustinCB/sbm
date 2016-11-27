@@ -54,8 +54,8 @@ process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`);
 })
 
-export default function (admin, mongo = 'sbm') {
-  return mongoose.connect(`mongodb://localhost/${mongo}`)
+export default function (admin, mongo = 'localhost/sbm') {
+  return mongoose.connect(`mongodb://${mongo}`)
     .then(() => User.register(Object.assign(admin, { admin: true })))
     .then((user) => app)
     .catch((err) => app)
