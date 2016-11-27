@@ -14,9 +14,12 @@ const main = (args) => {
       .then((app) => app.listen(args.port || args.p || DEFAULT_PORT))
       .catch((app) => app.listen(args.port || args.p || DEFAULT_PORT))
   }
+
+  return Promise.reject(new Error('Wrong command'))
 }
 
 if (require.main === module) {
   const args = minimist(process.argv.slice(2))
   main(args)
+    .catch((err) => console.log('An error happened!', err))
 }
