@@ -2,17 +2,29 @@
 
 import minimist from 'minimist'
 
-import server from './server'
+import {start, login, read, create, edit, del} from './commands'
 
-const DEFAULT_PORT = 3000
+const show = (result) => console.log(show)
 
 const main = (args) => {
-  if (args._[0] === 'start') {
-    if (!args.password) throw new Error("Set an admin password!")
-
-    return server({ username: 'admin', password: args.password }, args.mongo)
-      .then((app) => app.listen(args.port || args.p || DEFAULT_PORT))
-      .catch((app) => app.listen(args.port || args.p || DEFAULT_PORT))
+  switch(args._[0]) {
+    case 'start':
+      return start(args)
+    case 'login':
+      return login(args)
+        .then(show)
+    case 'read':
+      return read(args)
+        .then(show)
+    case 'create':
+      return create(args)
+        .then(show)
+    case 'edit':
+      return edit(args)
+        .then(show)
+    case 'delete':
+      return del(args)
+        .then(show)
   }
 
   return Promise.reject(new Error('Wrong command'))
