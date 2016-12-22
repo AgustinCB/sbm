@@ -13,7 +13,7 @@ const User = new mongoose.Schema({
 User.plugin(passport)
 
 User.statics.passportRegister = User.statics.register
-User.statics.register = function(user) {
+User.statics.register = function (user) {
   return new Promise((resolve, reject) => {
     const password = user.password
     user.password = undefined

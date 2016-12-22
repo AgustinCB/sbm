@@ -7,7 +7,7 @@ import {start, login, read, create, edit, del} from './commands'
 const show = (result) => console.log(show)
 
 const main = (args) => {
-  switch(args._[0]) {
+  switch (args._[0]) {
     case 'start':
       return start(args)
     case 'login':
@@ -27,7 +27,7 @@ const main = (args) => {
         .then(show)
   }
 
-  return Promise.reject(new Error('Wrong command'))
+  throw new Error('Wrong command')
 }
 
 if (require.main === module) {
