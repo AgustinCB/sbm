@@ -13,6 +13,7 @@ const config = () => {
     .then(() => location)
     .catch(() => fs.mkdir(location))
     .then(() => location)
+    .catch(() => location)
 }
 
 class Store {
@@ -23,9 +24,7 @@ class Store {
 
   set (content) {
     return this.file
-      .then((filepath) => {
-        return fs.writeFile(filepath, content, { flag: 'w' })
-      })
+      .then((filepath) => fs.writeFile(filepath, content, { flag: 'w' }))
       .then(() => content)
   }
 
@@ -104,7 +103,7 @@ class API {
         return token.get()
       })
       .then((token) => {
-        info.token = token.toString()
+        info.token = token ? token.toString() : undefined
         return info
       })
   }
