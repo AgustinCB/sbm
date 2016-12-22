@@ -10,13 +10,13 @@ import user from './controllers/user'
 import post from './controllers/post'
 import comment from './controllers/comment'
 
-const app = express(),
-      router = express.Router(),
-      authenticate = expressJwt({secret: 'server secret'}),
-      login = function (req, res, next) {
-        if (!req.user) return res.status(401)
-        next()
-      }
+const app = express()
+const router = express.Router()
+const authenticate = expressJwt({secret: 'server secret'})
+const login = function (req, res, next) {
+  if (!req.user) return res.status(401)
+  next()
+}
 
 mongoose.Promise = Promise
 
@@ -51,12 +51,18 @@ app.use((error, req, res, next) => {
 })
 
 process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`);
+  console.log(`Caught exception: ${err}`)
 })
 
+let connected = false
 export default function (admin, mongo = 'localhost/sbm') {
-  return mongoose.connect(`mongodb://${mongo}`)
-    .then(() => User.register(Object.assign(admin, { admin: true })))
+  return (connected
+    ? Promise.resolve(app)
+    : mongoose.connect(`mongodb://${mongo}`))
+    .then(() => {
+      connected = true
+      return User.register(Object.assign(admin, { admin: true }))
+    })
     .then((user) => app)
-    .catch((err) => app)
+    .catch((_) => app)
 }

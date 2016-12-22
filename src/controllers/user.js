@@ -12,12 +12,12 @@ export default {
       .then((user) => {
         res.status(200).json(user)
       })
-      .catch((err) => next(new ApiError('Wrong parameters', 400)))
+      .catch((err) => next(new ApiError('Wrong parameters', 400, err)))
   },
   create: (req, res, next) => {
     User.register(req.body)
       .then((user) => res.status(200).json(user))
-      .catch((err) => next(new ApiError('Wrong parameters', 409)))
+      .catch((err) => next(new ApiError('Wrong parameters', 409, err)))
   },
   update: (req, res, next) => {
     req.body.hash = undefined
@@ -25,12 +25,12 @@ export default {
 
     User.findOneAndUpdate({ username: req.params.id }, req.body)
       .then((user) => res.status(200).json(user))
-      .catch((err) => next(new ApiError('Wrong parameters', 409)))
+      .catch((err) => next(new ApiError('Wrong parameters', 409, err)))
   },
   delete: (req, res, next) => {
     User.remove({ username: req.params.id })
       .then(() => res.status(204).send())
-      .catch((err) => next(new ApiError('Wrong parameters', 400)))
+      .catch((err) => next(new ApiError('Wrong parameters', 400, err)))
   },
   authenticate: passport.authenticate('local', { session: false }),
   token: (req, res) => {
