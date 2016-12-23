@@ -121,16 +121,27 @@ describe('#commands', () => {
   })
 
   describe('#create', () => {
-    it('should create a post', () => {
-      return User.findOne({ username: 'admin' })
-        .then((user) => {
-          const post = JSON.stringify({
-            author: user._id,
-            content: 'Ford Prefect',
-            title: 'Dont panic'
-          })
-          return create({ _: [ 'create', 'post' ], data: post })
+    it('should create a post with expanded arguments', () => {
+      return create({
+        _: [ 'create', 'post' ],
+        content: 'Ford Prefect',
+        title: 'Dont panic'
+      })
+        .then((res) =>
+          Post.findById(res._id)
+        )
+        .then((post) => {
+          post.content.should.equal('Ford Prefect')
+          post.title.should.equal('Dont panic')
         })
+    })
+
+    it('should create a post', () => {
+      const post = JSON.stringify({
+        content: 'Ford Prefect',
+        title: 'Dont panic'
+      })
+      return create({ _: [ 'create', 'post' ], data: post })
         .then((res) =>
           Post.findById(res._id)
         )
@@ -142,14 +153,11 @@ describe('#commands', () => {
 
     it('should create a comment', () => {
       let commentPost
-      return User.findOne({ username: 'admin' })
-        .then((user) =>
-          (new Post({
-            author: user.id,
-            title: 'Ford Perfect',
-            content: 'Dont panic'
-          })).save()
-        )
+      return
+        (new Post({
+          title: 'Ford Perfect',
+          content: 'Dont panic'
+        })).save()
         .then((post) => {
           const comment = JSON.stringify({
             content: 'Goodbye and thank you for the fish',
@@ -189,17 +197,28 @@ describe('#commands', () => {
   })
 
   describe('#edit', () => {
+    it('should edit a post with expanded arguments', () => {
+      const post = new Post({
+        content: 'Ford Prefect',
+        title: 'Dont panic'
+      })
+
+      return post.save()
+        .then(() => edit({
+          _: [ 'edit', 'post', post._id ],
+          content: 'Ford Perfect'
+        }))
+        .then(() => Post.findById(post.id))
+        .then((post) => post.content.should.equal('Ford Perfect'))
+    })
+
     it('should edit a post', () => {
       const post = new Post({
         content: 'Ford Prefect',
         title: 'Dont panic'
       })
 
-      return User.findOne({ username: 'admin' })
-        .then((user) => {
-          post.author = user._id
-          return post.save()
-        })
+      return post.save()
         .then(() => edit({
           _: [ 'edit', 'post', post._id ],
           data: JSON.stringify({ content: 'Ford Perfect' })
@@ -217,11 +236,7 @@ describe('#commands', () => {
         }]
       })
 
-      return User.findOne({ username: 'admin' })
-        .then((user) => {
-          post.author = user._id
-          return post.save()
-        })
+      return post.save()
         .then((post) =>
           edit({
             _: [ 'edit', 'comment', post.comments[0]._id ],
@@ -263,11 +278,7 @@ describe('#commands', () => {
         title: 'Dont panic'
       })
 
-      return User.findOne({ username: 'admin' })
-        .then((user) => {
-          post.author = user._id
-          return post.save()
-        })
+      return post.save()
         .then(() => del({ _: [ 'delete', 'post', post._id ] }))
         .then(() => Post.findById(post.id))
         .then((post) => should.not.exist(post))
@@ -282,11 +293,7 @@ describe('#commands', () => {
         }]
       })
 
-      return User.findOne({ username: 'admin' })
-        .then((user) => {
-          post.author = user._id
-          return post.save()
-        })
+      return post.save()
         .then((post) =>
           del({
             _: [ 'delete', 'comment', post.comments[0]._id ],
