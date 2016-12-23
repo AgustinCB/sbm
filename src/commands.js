@@ -3,6 +3,14 @@ import server from './server'
 
 const DEFAULT_PORT = 3000
 
+const getData = (args) => {
+  if (args.data) return JSON.parse(args.data)
+
+  const data = Object.assign({}, args)
+  data._ = undefined
+  return data
+}
+
 export const start = (args) => {
   if (!args.password) throw new Error('Set an admin password!')
 
@@ -46,10 +54,7 @@ export const read = (args) => {
 }
 
 export const create = (args) => {
-  if (!args.data) {
-    throw new Error('You need to pass the data to create')
-  }
-  const data = JSON.parse(args.data)
+  const data = getData(args)
   switch (args._[1]) {
     case 'post':
       return api
@@ -70,10 +75,7 @@ export const create = (args) => {
 }
 
 export const edit = (args) => {
-  if (!args.data) {
-    throw new Error('You need to pass the data to create')
-  }
-  const data = JSON.parse(args.data)
+  const data = getData(args)
   switch (args._[1]) {
     case 'post':
       return api
