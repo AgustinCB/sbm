@@ -4,7 +4,7 @@ import minimist from 'minimist'
 
 import {start, login, read, create, edit, del} from './commands'
 
-const show = (result) => console.log(show)
+const show = (result) => console.log(result)
 
 const main = (args) => {
   switch (args._[0]) {
