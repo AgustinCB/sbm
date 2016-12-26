@@ -15,6 +15,7 @@ const router = express.Router()
 const authenticate = expressJwt({secret: 'server secret'})
 const login = function (req, res, next) {
   if (!req.user) return res.status(401)
+  req.user = req.user._doc
   next()
 }
 
@@ -25,9 +26,9 @@ app.use(bodyParser.urlencoded())
 app.use(passport.initialize())
 passport.use(new LocalStrategy(User.authenticate()))
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
 

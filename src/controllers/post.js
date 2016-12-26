@@ -7,18 +7,20 @@ export default {
     const page = req.params.page || 0
 
     Post.find({}).skip(page * results).limit(results)
+      .populate('author')
       .then((posts) => res.status(200).json(posts))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   },
   get: (req, res, next) => {
     Post.findById(req.params.post)
+      .populate('author')
       .then((post) => res.status(200).json(post))
       .catch((err) => next(new ApiError('Post not found', 404, err)))
   },
   create: (req, res, next) => {
     const newPost = new Post(req.body)
 
-    req.body.author = req.user.id
+    newPost.author = req.user._id
 
     newPost.save()
       .then((post) => res.status(200).json(post))

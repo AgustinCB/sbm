@@ -153,6 +153,10 @@ describe('#api', function() {
           res.body.length.should.equal(1)
           res.body[0].title.should.equal('Blog entry one')
           res.body[0].content.should.equal('Blog entry content')
+          return User.findById(res.body[0].author._id)
+        })
+        .then((user) => {
+          user.username.should.equal('admin')
         })
     })
 
@@ -175,6 +179,10 @@ describe('#api', function() {
           res.should.have.status(200)
           res.body.title.should.equal('Blog entry one')
           res.body.content.should.equal('Blog entry content')
+          return User.findById(res.body.author._id)
+        })
+        .then((user) => {
+          user.username.should.equal('admin')
         })
     })
 
@@ -190,6 +198,10 @@ describe('#api', function() {
           res.should.have.status(200)
           res.body.title.should.equal('Blog entry one')
           res.body.content.should.equal('Blog entry content 2')
+          return User.findOne({ _id: res.body.author })
+        })
+        .then((user) => {
+          user.username.should.equal("admin")
         })
     })
 
