@@ -25,6 +25,12 @@ app.use(bodyParser.urlencoded())
 app.use(passport.initialize())
 passport.use(new LocalStrategy(User.authenticate()))
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+  next()
+})
+
 router.post('/auth', user.authenticate, user.token)
 
 router.get('/user/:id', user.current)
