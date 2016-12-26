@@ -272,8 +272,8 @@ describe('#api', function() {
             title: 'Blog entry one',
             content: 'Blog entry content',
             comments: [
-              new Comment({ author: user.id, content: 'Comment one' }),
-              new Comment({ author: user.id, content: 'Comment two' })
+              new Comment({ content: 'Comment one' }),
+              new Comment({ content: 'Comment two' })
             ]
           })
 

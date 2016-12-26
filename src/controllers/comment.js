@@ -7,13 +7,14 @@ export default {
     const post = req.params.post
 
     Post.findById(post)
+      .populate('author')
       .then((post) => res.status(200).json(post.comments))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   },
   create: (req, res, next) => {
     const post = req.params.post
 
-    req.body.author = req.user.id
+    req.body.author = req.user._id
 
     Post.findById(post)
       .then((post) => {
