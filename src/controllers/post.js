@@ -27,7 +27,7 @@ export default {
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   },
   update: (req, res, next) => {
-    req.body.author = undefined
+    delete req.body.author
 
     Post.findByIdAndUpdate(req.params.post, req.body)
       .then((post) => res.status(200).json(post))

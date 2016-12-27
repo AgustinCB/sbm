@@ -230,6 +230,7 @@ describe('#api', function() {
           return Post.findById(res.body._id)
         })
         .then((post) => {
+          post.author.should.exist
           post.title.should.equal('Blog entry one 2')
           post.content.should.equal('Blog entry content 2')
         })
