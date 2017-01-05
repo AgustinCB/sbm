@@ -7,7 +7,8 @@
     "start": "./start.sh",
     "test": "nodemon -i src --exec 'chmod +x test.sh; ./test.sh'",
     "gendoc": "./node_modules/jsdox/bin/jsdox --output docs src",
-    "build": "./node_modules/babel-cli/bin/babel.js src --presets babel-preset-es2015 --out-dir lib"
+    "build": "./node_modules/babel-cli/bin/babel.js src --presets babel-preset-es2015 --out-dir lib",
+    "watch": "nodemon --watch src --exec 'npm run build'"
   },
   "repository": {
     "type": "git",

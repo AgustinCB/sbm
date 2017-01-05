@@ -82,7 +82,9 @@ describe('#commands', () => {
             })).save()
           ])
         )
-        .then((_posts) => posts = _posts)
+        .then((_posts) => posts = _posts.sort((post1, post2) =>
+          post1.createdAt.getTime() < post2.createdAt.getTime()
+        ))
     })
 
     it('should read blog posts', () => {

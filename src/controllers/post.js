@@ -6,7 +6,9 @@ export default {
     const results = req.params.results || 5
     const page = req.params.page || 0
 
-    Post.find({}).skip(page * results).limit(results)
+    Post.find({}).skip(page * results)
+      .sort('-createdAt')
+      .limit(results)
       .populate('author')
       .then((posts) => res.status(200).json(posts))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
