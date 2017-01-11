@@ -89,11 +89,12 @@ describe('#commands', () => {
 
     it('should read blog posts', () => {
       return read({ _: [ 'read', 'posts' ] })
-        .then((_posts) =>
+        .then((_posts) => {
+          _posts.count.should.equal(6)
           posts.slice(0, -1).forEach((post, index) =>
-            post._id.toString().should.equal(_posts[index]._id.toString())
+            post._id.toString().should.equal(_posts.posts[index]._id.toString())
           )
-        )
+        })
     })
 
     it('should read a blog post', () => {

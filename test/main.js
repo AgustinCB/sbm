@@ -150,10 +150,11 @@ describe('#api', function() {
         })
         .then((res) => {
           res.should.have.status(200)
-          res.body.length.should.equal(1)
-          res.body[0].title.should.equal('Blog entry one')
-          res.body[0].content.should.equal('Blog entry content')
-          return User.findById(res.body[0].author._id)
+          res.body.count.should.equal(1)
+          res.body.posts.length.should.equal(1)
+          res.body.posts[0].title.should.equal('Blog entry one')
+          res.body.posts[0].content.should.equal('Blog entry content')
+          return User.findById(res.body.posts[0].author._id)
         })
         .then((user) => {
           user.username.should.equal('admin')

@@ -5,12 +5,16 @@ export default {
   list: (req, res, next) => {
     const results = req.params.results || 5
     const page = req.params.page || 0
-
-    Post.find({}).skip(page * results)
+    const pageQuery = Post.find({}).skip(page * results)
       .sort('-createdAt')
       .limit(results)
       .populate('author')
-      .then((posts) => res.status(200).json(posts))
+
+    Promise.all([ pageQuery, Post.find({}).count() ])
+      .then((results) => res.status(200).json({
+        posts: results[0],
+        count: results[1]
+      }))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   },
   get: (req, res, next) => {
