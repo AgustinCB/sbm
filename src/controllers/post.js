@@ -3,8 +3,8 @@ import ApiError from '../error/api_error'
 
 export default {
   list: (req, res, next) => {
-    const results = req.params.results || 5
-    const page = req.params.page || 0
+    const results = req.query.results || 5
+    const page = req.query.page || 0
     const pageQuery = Post.find({}).skip(page * results)
       .sort('-createdAt')
       .limit(results)
