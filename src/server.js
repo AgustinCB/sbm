@@ -62,7 +62,13 @@ process.on('uncaughtException', (err) => {
 })
 
 let connected = false
-export default function (admin, mongo = 'localhost/sbm') {
+
+const loadPlugins = (folder) => {
+  const plugins = require(folder)
+  plugins.default(app, mongoose)
+}
+
+export default function (admin, mongo = 'localhost/sbm', plugins = './plugins') {
   return (connected
     ? Promise.resolve(app)
     : mongoose.connect(`mongodb://${mongo}`))
@@ -70,6 +76,7 @@ export default function (admin, mongo = 'localhost/sbm') {
       connected = true
       return User.register(Object.assign(admin, { admin: true }))
     })
-    .then((user) => app)
+    .then((user) => loadPlugins(plugins))
+    .then(() => app)
     .catch((_) => app)
 }
