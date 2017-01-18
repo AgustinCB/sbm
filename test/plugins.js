@@ -70,13 +70,14 @@ describe('#plugins', function() {
       })
       .then((res) => {
         res.should.have.status(200)
-        res.body.length.should.equal(5)
+        res.body.posts.length.should.equal(5)
+        res.body.count.should.equal(6)
        
-        res.body[0]._id.toString().should.equal(_posts[0]._id.toString())
-        res.body[1]._id.toString().should.equal(_posts[1]._id.toString())
-        res.body[2]._id.toString().should.equal(_posts[2]._id.toString())
-        res.body[3]._id.toString().should.equal(_posts[3]._id.toString())
-        res.body[4]._id.toString().should.equal(_posts[4]._id.toString())
+        res.body.posts[0]._id.toString().should.equal(_posts[0]._id.toString())
+        res.body.posts[1]._id.toString().should.equal(_posts[1]._id.toString())
+        res.body.posts[2]._id.toString().should.equal(_posts[2]._id.toString())
+        res.body.posts[3]._id.toString().should.equal(_posts[3]._id.toString())
+        res.body.posts[4]._id.toString().should.equal(_posts[4]._id.toString())
       })
   })
 

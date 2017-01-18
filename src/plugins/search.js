@@ -18,13 +18,17 @@ const prepareApp = (app, mongoose) => {
     const term = req.params.term
     const results = req.query.results || 5
     const page = req.query.page || 0
-
-    Post.find({ $text: { $search: term } })
+    const searchQuery = Post.find({ $text: { $search: term } })
       .skip(page * results)
       .sort('-createdAt -title')
       .limit(results)
       .populate('author')
-      .then((posts) => res.status(200).json(posts))
+
+    Promise.all([ searchQuery, Post.find({ $text: { $search: term } }).count() ])
+      .then((results) => res.status(200).json({
+        posts: results[0],
+        count: results[1]
+      }))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   })
 
