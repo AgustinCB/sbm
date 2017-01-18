@@ -21,7 +21,7 @@ const prepareApp = (app, mongoose) => {
 
     Post.find({ $text: { $search: term } })
       .skip(page * results)
-      .sort('-createdAt')
+      .sort('-createdAt -title')
       .limit(results)
       .populate('author')
       .then((posts) => res.status(200).json(posts))
