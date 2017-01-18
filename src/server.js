@@ -82,5 +82,5 @@ export default function (admin, mongo = 'localhost/sbm', plugins = './plugins') 
     })
     .then((user) => loadPlugins(plugins))
     .then(() => app)
-    .catch((_) => {console.log(_); return app})
+    .catch((_) => app)
 }
