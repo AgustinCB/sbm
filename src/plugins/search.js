@@ -14,9 +14,6 @@ const prepareApp = (app, mongoose) => {
   const router = express.Router()
   const { Post } = mongoose.models
 
-
-  router.get('/caca', (req, res, next) => res.status(200).json({test: true}))
-  
   router.get('/:term', (req, res, next) => {
     const term = req.params.term
     const results = req.query.results || 5

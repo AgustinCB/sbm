@@ -74,9 +74,13 @@ export default function (admin, mongo = 'localhost/sbm', plugins = './plugins') 
     : mongoose.connect(`mongodb://${mongo}`))
     .then(() => {
       connected = true
+      return User.findOne({ username: admin.username})
+    })
+    .then((user) => {
+      if (user) return Promise.resolve()
       return User.register(Object.assign(admin, { admin: true }))
     })
     .then((user) => loadPlugins(plugins))
     .then(() => app)
-    .catch((_) => app)
+    .catch((_) => {console.log(_); return app})
 }
