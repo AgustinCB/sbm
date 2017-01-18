@@ -5,7 +5,8 @@ export default {
   list: (req, res, next) => {
     const results = req.query.results || 5
     const page = req.query.page || 0
-    const pageQuery = Post.find({}).skip(page * results)
+    const pageQuery = Post.find({})
+      .skip(page * results)
       .sort('-createdAt')
       .limit(results)
       .populate('author')

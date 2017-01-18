@@ -16,9 +16,13 @@ const prepareApp = (app, mongoose) => {
 
   router.get('/:term', (req, res, next) => {
     const term = req.params.term
+    const results = req.query.results || 5
+    const page = req.query.page || 0
 
     Post.find({ $text: { $search: term } })
-      .sort('-createdAt -title')
+      .skip(page * results)
+      .sort('-createdAt')
+      .limit(results)
       .populate('author')
       .then((posts) => res.status(200).json(posts))
       .catch((err) => next(new ApiError('Bad request', 400, err)))
