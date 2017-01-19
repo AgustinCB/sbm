@@ -13,6 +13,7 @@ export default {
 
     Promise.all([ pageQuery, Post.find({}).count() ])
       .then((results) => res.status(200).json({
+        page,
         posts: results[0],
         count: results[1]
       }))
