@@ -6,8 +6,8 @@ const prepareModel = (mongoose) => {
   const { Post } = mongoose.models
 
   // Ensure text index
-  collection.ensureIndex({ content: 'text', title: 'text' })
-  Post.schema.index({ content: 'text', title: 'text' })
+  collection.ensureIndex({ content: 'text', title: 'text', category: 'text' })
+  Post.schema.index({ content: 'text', title: 'text', category: 'text' })
 }
 
 const prepareApp = (app, mongoose) => {
