@@ -15,7 +15,17 @@ describe('#plugins', function() {
   let app, token
   before(function () {
     return server({ username, password }, `localhost/test${Date.now()}`)
-      .then((_app) => app = _app)
+      .then((_app) => {
+        app = _app
+        return chai.request(app)
+          .post('/api/auth')
+          .send({ username, password })
+      })
+      .then((res) => {
+        res.should.have.status(200)
+        res.body.token.should.exist
+        token = res.body.token
+      })
   })
 
   describe('#search', function () {
@@ -150,6 +160,49 @@ describe('#plugins', function() {
           res.body.posts[2]._id.toString().should.equal(_posts[2]._id.toString())
           res.body.posts[3]._id.toString().should.equal(_posts[3]._id.toString())
           res.body.posts[4]._id.toString().should.equal(_posts[4]._id.toString())
+        })
+    })
+  })
+
+  describe('#globals', function () {
+    it('should create a global', function () {
+      return chai.request(app)
+        .post('/api/globals/test')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          value: 'test_value'
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.value.should.equal('test_value')
+          res.body.name.should.equal('test')
+        })
+    })
+
+    it('should get a global', function () {
+      return chai.request(app)
+        .get('/api/globals/test')
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.value.should.equal('test_value')
+          res.body.name.should.equal('test')
+        })
+    })
+
+    it('should get all globals', function () {
+      return chai.request(app)
+        .post('/api/globals/test1')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          value: 'test_value1'
+        })
+        .then((res) => {
+          return chai.request(app)
+            .get('/api/globals')
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.length.should.equal(2)
         })
     })
   })

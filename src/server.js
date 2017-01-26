@@ -65,7 +65,7 @@ let connected = false
 
 const loadPlugins = (folder) => {
   const plugins = require(folder)
-  plugins.default(app, mongoose)
+  plugins.default(app, mongoose, authenticate, login)
 }
 
 export default function (admin, mongo = 'localhost/sbm', plugins = './plugins') {
