@@ -3,7 +3,7 @@ import ApiError from '../error/api_error'
 
 const prepareModel = (mongoose) => {
   const Globals = new mongoose.Schema({
-    name: String,
+    name: { type: String, unique: true },
     value: String
   })
 
