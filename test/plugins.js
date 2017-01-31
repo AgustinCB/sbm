@@ -179,6 +179,21 @@ describe('#plugins', function() {
         })
     })
 
+    it('should update a global', function () {
+      const { Globals } = mongoose.models
+
+      return chai.request(app)
+        .put('/api/globals/test')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          value: 'test_value1'
+        })
+        .then(() => Globals.findOne({ name: 'test' }))
+        .then((global) => {
+          global.value.should.equal('test_value')
+        })
+    })
+
     it('should get a global', function () {
       return chai.request(app)
         .get('/api/globals/test')
@@ -203,6 +218,18 @@ describe('#plugins', function() {
         .then((res) => {
           res.should.have.status(200)
           res.body.length.should.equal(2)
+        })
+    })
+
+    it('should delete a global', function () {
+      const { Globals } = mongoose.models
+
+      return chai.request(app)
+        .delete('/api/globals/test')
+        .set('Authorization', `Bearer ${token}`)
+        .then(() => Globals.findOne({ name: 'test' }))
+        .then((global) => {
+          should.not.exist(global)
         })
     })
   })

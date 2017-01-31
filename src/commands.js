@@ -50,6 +50,10 @@ export const read = (args) => {
       return api
         .get(`/user/${args._[2]}`)
         .then((res) => res.body)
+    default:
+      return api
+        .get(`/${args._[1]}/${args._[2]}`)
+        .then((res) => res.body)
   }
 }
 
@@ -70,6 +74,10 @@ export const create = (args) => {
     case 'user':
       return api
         .post('/user', data)
+        .then((res) => res.body)
+    default:
+      return api
+        .post(`/${args._[1]}`, data)
         .then((res) => res.body)
   }
 }
@@ -92,6 +100,10 @@ export const edit = (args) => {
       return api
         .put(`/user/${args._[2]}`, data)
         .then((res) => res.body)
+    default:
+      return api
+        .put(`/${args._[1]}/${args._[2]}`, data)
+        .then((res) => res.body)
   }
 }
 
@@ -111,6 +123,10 @@ export const del = (args) => {
     case 'user':
       return api
         .delete(`/user/${args._[2]}`)
+        .then((res) => res.body)
+    default:
+      return api
+        .delete(`/${args._[1]}/${args._[2]}`)
         .then((res) => res.body)
   }
 }
