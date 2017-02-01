@@ -167,9 +167,10 @@ describe('#plugins', function() {
   describe('#globals', function () {
     it('should create a global', function () {
       return chai.request(app)
-        .post('/api/globals/test')
+        .post('/api/globals')
         .set('Authorization', `Bearer ${token}`)
         .send({
+          global: 'test',
           value: 'test_value'
         })
         .then((res) => {
@@ -206,18 +207,15 @@ describe('#plugins', function() {
 
     it('should get all globals', function () {
       return chai.request(app)
-        .post('/api/globals/test1')
+        .get('/api/globals')
         .set('Authorization', `Bearer ${token}`)
-        .send({
-          value: 'test_value1'
-        })
         .then((res) => {
           return chai.request(app)
             .get('/api/globals')
         })
         .then((res) => {
           res.should.have.status(200)
-          res.body.length.should.equal(2)
+          res.body.length.should.equal(1)
         })
     })
 

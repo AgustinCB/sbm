@@ -26,9 +26,9 @@ const prepareApp = (app, mongoose, authenticate, login) => {
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   })
 
-  router.post('/:global', authenticate, login, (req, res, next) => {
+  router.post('/', authenticate, login, (req, res, next) => {
     const global = new Globals({
-      name: req.params.global,
+      name: req.body.global,
       value: req.body.value
     })
     return global.save()
