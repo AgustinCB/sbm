@@ -1,5 +1,14 @@
+import mongoose from 'mongoose'
 import Post from '../models/post'
 import ApiError from '../error/api_error'
+
+const getType = (value) => {
+  try {
+    return { _id: mongoose.Types.ObjectId(value) }
+  } catch (_) {
+    return { title: value }
+  }
+}
 
 export default {
   list: (req, res, next) => {
@@ -20,10 +29,10 @@ export default {
       .catch((err) => next(new ApiError('Bad request', 400, err)))
   },
   get: (req, res, next) => {
-    Post.findById(req.params.post)
+    Post.findOne(getType(req.params.post))
       .populate('author')
       .then((post) => res.status(200).json(post))
-      .catch((err) => next(new ApiError('Post not found', 404, err)))
+      .catch((err) => { console.log(err); return next(new ApiError('Post not found', 404, err)) })
   },
   create: (req, res, next) => {
     const newPost = new Post(req.body)

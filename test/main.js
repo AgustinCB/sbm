@@ -187,6 +187,32 @@ describe('#api', function() {
         })
     })
 
+    it('should get a post using title', function () {
+      return User.findOne({ username: 'admin' })
+        .then((user) => {
+          const post = new Post({
+            author: user.id,
+            title: 'Blog entry one',
+            content: 'Blog entry content',
+          })
+
+          return post.save()
+        })
+        .then((post) => {
+          return chai.request(app)
+            .get(`/api/post/${encodeURIComponent('Blog entry one')}`)
+        })
+        .then((res) => {
+          res.should.have.status(200)
+          res.body.title.should.equal('Blog entry one')
+          res.body.content.should.equal('Blog entry content')
+          return User.findById(res.body.author._id)
+        })
+        .then((user) => {
+          user.username.should.equal('admin')
+        })
+    })
+
     it('should create a post', function () {
       return chai.request(app)
         .post('/api/post/')
