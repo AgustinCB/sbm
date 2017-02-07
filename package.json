@@ -1,6 +1,6 @@
 {
   "name": "simple-blog-machine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple blog service",
   "main": "./lib/main",
   "bin": {

@@ -5,7 +5,7 @@ Basic blog backend with a full REST API and a simple command line tool.
 ## Installation
 
 ```bash
-npm install -g sbm
+npm install -g simple-blog-machine
 ```
 
 ## Usage
