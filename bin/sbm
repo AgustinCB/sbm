@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+const minimist = require('minimist'),
+  main = require('../lib/main').default
+
+if (require.main === module) {
+  const args = minimist(process.argv.slice(2))
+  main(args)
+    .catch((err) => console.log('An error happened!', err))
+}

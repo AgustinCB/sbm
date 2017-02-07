@@ -1,12 +1,10 @@
 'use strict'
 
-import minimist from 'minimist'
-
 import {start, login, read, create, edit, del} from './commands'
 
 const show = (result) => console.log(result)
 
-const main = (args) => {
+export default function (args) {
   switch (args._[0]) {
     case 'start':
       return start(args)
@@ -28,10 +26,4 @@ const main = (args) => {
   }
 
   throw new Error('Wrong command')
-}
-
-if (require.main === module) {
-  const args = minimist(process.argv.slice(2))
-  main(args)
-    .catch((err) => console.log('An error happened!', err))
 }
