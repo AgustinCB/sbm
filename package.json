@@ -1,8 +1,11 @@
 {
-  "name": "npm-boilerplate",
+  "name": "simple-blog-machine",
   "version": "1.0.0",
-  "description": "NPM package boilerplate with tests and babel for ES2015",
+  "description": "Simple blog service",
   "main": "./lib/main",
+  "bin": {
+    "sbm": "./bin/sbm"
+  },
   "scripts": {
     "start": "./start.sh",
     "test": "nodemon -i src --exec 'chmod +x test.sh; ./test.sh'",
@@ -15,9 +18,8 @@
     "url": "git+https://github.com/AgustinCB/npm-boilerplate.git"
   },
   "keywords": [
-    "npm",
-    "boilerplate",
-    "package"
+    "blog",
+    "server"
   ],
   "author": "AgustinCB",
   "license": "GPL-2.0",
