@@ -6,6 +6,9 @@
   "bin": {
     "sbm": "./bin/sbm"
   },
+  "engines": {
+    "node": "8.1.4"
+  },
   "scripts": {
     "start": "./start.sh",
     "test": "nodemon -i src --exec 'chmod +x test.sh; ./test.sh'",
