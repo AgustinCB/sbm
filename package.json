@@ -39,7 +39,7 @@
     "mocha": "^2.5.3",
     "nodemon": "^1.11.0",
     "standard": "^7.1.2",
-    "superagent": "^3.3.1"
+    "superagent": "^3.5.2"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
