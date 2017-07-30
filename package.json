@@ -1,6 +1,6 @@
 {
   "name": "simple-blog-machine",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple blog service",
   "main": "./lib/main",
   "bin": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AgustinCB/npm-boilerplate.git"
+    "url": "git+https://github.com/AgustinCB/sbm.git"
   },
   "keywords": [
     "blog",
@@ -27,9 +27,9 @@
   "author": "AgustinCB",
   "license": "GPL-2.0",
   "bugs": {
-    "url": "https://github.com/AgustinCB/npm-boilerplate/issues"
+    "url": "https://github.com/AgustinCB/sbm/issues"
   },
-  "homepage": "https://github.com/AgustinCB/npm-boilerplate#readme",
+  "homepage": "https://github.com/AgustinCB/sbm#readme",
   "devDependencies": {
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
